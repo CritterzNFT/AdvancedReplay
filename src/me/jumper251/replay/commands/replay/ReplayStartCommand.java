@@ -3,6 +3,8 @@ package me.jumper251.replay.commands.replay;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.puregero.multilib.MultiLib;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -45,16 +47,20 @@ public class ReplayStartCommand extends SubCommand {
 		
 		List<Player> toRecord = new ArrayList<>();
 
-		if (args.length <= 2) {
-			toRecord.addAll(Bukkit.getOnlinePlayers());
+		if (args.length != 3) {
+			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay must specify 1 username.");
+			return true;
+		}
 
-		} else {
-			for (int i = 2; i < args.length; i++) {
-				if (Bukkit.getPlayer(args[i]) != null) {
-					toRecord.add(Bukkit.getPlayer(args[i]));
-				}
+		Player csPlayer = (Player) cs;
+		Player targetPlayer = Bukkit.getPlayer(args[2]);
+		if (MultiLib.isExternalPlayer(targetPlayer)) {
+			if (MultiLib.isLocalPlayer(csPlayer)) {
+				MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0]  + " " + args[1] + " " + args[2]);
 			}
-
+			return false;
+		} else {
+			toRecord.add(targetPlayer);
 		}
 		
 		ReplayAPI.getInstance().recordReplay(name, cs, toRecord);
