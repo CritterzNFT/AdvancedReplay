@@ -1,9 +1,11 @@
 package me.jumper251.replay.commands.replay;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.github.puregero.multilib.MultiLib;
+// import com.github.puregero.multilib.MultiLib;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -30,8 +32,20 @@ public class ReplayStartCommand extends SubCommand {
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
 		if (args.length < 1) return false;
 		
-		String name = parseName(args);
-		int duration = parseDuration(args);
+		Player targetPlayer;
+		String name;
+		int duration;
+		
+		if (args.length == 2) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd-HH:mm");
+			targetPlayer = Bukkit.getPlayer(args[1]);
+			name = args[1] + "-" + simpleDateFormat.format(new Date());
+			duration = 0;
+		} else {
+			targetPlayer = Bukkit.getPlayer(args[2]);
+			name = parseName(args);
+			duration = parseDuration(args);
+		}
 		
 		if (name == null || duration < 0) {
 			return false;
@@ -47,21 +61,21 @@ public class ReplayStartCommand extends SubCommand {
 		
 		List<Player> toRecord = new ArrayList<>();
 
-		if (args.length != 3) {
-			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay must specify 1 username.");
+		if (args.length > 3) {
+			cs.sendMessage(ReplaySystem.PREFIX + "§cReplay can only specify 1 username.");
 			return true;
 		}
 
-		Player csPlayer = (Player) cs;
-		Player targetPlayer = Bukkit.getPlayer(args[2]);
-		if (MultiLib.isExternalPlayer(targetPlayer)) {
-			if (MultiLib.isLocalPlayer(csPlayer)) {
-				MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0]  + " " + args[1] + " " + args[2]);
-			}
-			return false;
-		} else {
+		// Player csPlayer = (Player) cs;
+
+		// if (MultiLib.isExternalPlayer(targetPlayer)) {
+		// 	if (MultiLib.isLocalPlayer(csPlayer)) {
+		// 		MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0]  + " " + args[1] + " " + args[2]);
+		// 	}
+		// 	return false;
+		// } else {
 			toRecord.add(targetPlayer);
-		}
+		// }
 		
 		ReplayAPI.getInstance().recordReplay(name, cs, toRecord);
 
@@ -77,10 +91,6 @@ public class ReplayStartCommand extends SubCommand {
 					ReplayAPI.getInstance().stopReplay(name, true, true);
 				}
 			}.runTaskLater(ReplaySystem.getInstance(), duration * 20);
-		}
-		
-		if (args.length <= 2) {
-			cs.sendMessage("§7INFO: You are recording all online players.");
 		}
 		
 		return true;

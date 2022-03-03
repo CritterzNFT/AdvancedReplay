@@ -6,12 +6,12 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
-import com.github.puregero.multilib.MultiLib;
+// import com.github.puregero.multilib.MultiLib;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
-import org.bukkit.entity.Player;
+// import org.bukkit.entity.Player;
 
 import me.jumper251.replay.ReplaySystem;
 import me.jumper251.replay.commands.AbstractCommand;
@@ -31,10 +31,10 @@ public class ReplayStopCommand extends SubCommand {
 	public boolean execute(CommandSender cs, Command cmd, String label, String[] args) {
 		if (args.length > 3 || args.length < 2) return false;
 		
-		Player csPlayer = (Player) cs;
-		if (MultiLib.isLocalPlayer(csPlayer)) {
-			MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0] + " " + args[1]);
-		}
+		// Player csPlayer = (Player) cs;
+		// if (MultiLib.isLocalPlayer(csPlayer)) {
+		// 	MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0] + " " + args[1]);
+		// }
 
 		String name = args[1];
 		
