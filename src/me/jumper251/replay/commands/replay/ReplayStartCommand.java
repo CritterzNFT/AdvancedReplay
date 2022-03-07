@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-// import com.github.puregero.multilib.MultiLib;
+import com.github.puregero.multilib.MultiLib;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -66,16 +66,16 @@ public class ReplayStartCommand extends SubCommand {
 			return true;
 		}
 
-		// Player csPlayer = (Player) cs;
+		Player csPlayer = (Player) cs;
 
-		// if (MultiLib.isExternalPlayer(targetPlayer)) {
-		// 	if (MultiLib.isLocalPlayer(csPlayer)) {
-		// 		MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0]  + " " + args[1] + " " + args[2]);
-		// 	}
-		// 	return false;
-		// } else {
+		if (MultiLib.isExternalPlayer(targetPlayer)) {
+			if (MultiLib.isLocalPlayer(csPlayer)) {
+				MultiLib.chatOnOtherServers(csPlayer, "/" + label + " " + args[0]  + " " + args[1] + " " + args[2]);
+			}
+			return false;
+		} else {
 			toRecord.add(targetPlayer);
-		// }
+		}
 		
 		ReplayAPI.getInstance().recordReplay(name, cs, toRecord);
 
